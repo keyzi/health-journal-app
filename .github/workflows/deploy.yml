@@ -9,6 +9,12 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ vars.SSH_HOST || secrets.SSH_HOST }}
+      SSH_USER: ${{ vars.SSH_USER || secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_PORT: ${{ vars.SSH_PORT || secrets.SSH_PORT || '22' }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || secrets.DEPLOY_PATH }}
     steps:
       - uses: actions/checkout@v4
 
@@ -27,16 +33,11 @@ jobs:
         run: npm run build
 
       - name: Validate deploy secrets
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
           missing=0
           for name in SSH_HOST SSH_USER SSH_KEY DEPLOY_PATH; do
             if [ -z "${!name}" ]; then
-              echo "::error::Missing required GitHub Actions secret: $name"
+              echo "::error::Missing required deploy setting: $name"
               missing=1
             fi
           done
@@ -47,8 +48,8 @@ jobs:
         with:
           switches: -avz --delete
           path: dist/
-          remote_path: ${{ secrets.DEPLOY_PATH }}
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_KEY }}
-          remote_port: ${{ secrets.SSH_PORT || '22' }}
+          remote_path: ${{ env.DEPLOY_PATH }}
+          remote_host: ${{ env.SSH_HOST }}
+          remote_user: ${{ env.SSH_USER }}
+          remote_key: ${{ env.SSH_KEY }}
+          remote_port: ${{ env.SSH_PORT }}
