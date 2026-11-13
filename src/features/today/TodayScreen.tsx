@@ -56,7 +56,7 @@ type TodayEditorProps = {
   existingEntry?: HealthEntry;
   previousEntry?: HealthEntry;
   duplicateFromPrevious: (date: string) => HealthEntry | undefined;
-  saveEntry: (entry: HealthEntry) => void;
+  saveEntry: (entry: HealthEntry) => Promise<void>;
   setSearchDate: (date: string) => void;
 };
 
@@ -73,6 +73,9 @@ function TodayEditor({
   );
   const [medicineInput, setMedicineInput] = useState("");
   const [mealInput, setMealInput] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const [savedDraft, setSavedDraft] = useState<HealthEntry | null>(null);
   const [savedAt, setSavedAt] = useState<string | null>(null);
 
   const medicationPool = dedupe([
@@ -133,14 +136,23 @@ function TodayEditor({
     if (key === "meals") setMealInput("");
   }
 
-  function save() {
-    saveEntry({ ...draft, date: selectedDate });
+  async function save() {
+    if (saving) return;
+    setSaving(true);
+    setSaveError("");
+    setSavedAt(null);
+    try {
+    await saveEntry({ ...draft, date: selectedDate });
+    setSavedDraft(draft);
     setSavedAt(
       new Date().toLocaleTimeString("ru-RU", {
         hour: "2-digit",
         minute: "2-digit",
       }),
     );
+    } catch {
+      setSaveError("Не удалось сохранить. Запись остаётся в форме — проверьте интернет и нажмите ещё раз.");
+    } finally { setSaving(false); }
   }
 
   function loadPreviousDay() {
@@ -206,7 +218,7 @@ function TodayEditor({
             >
               Копировать вчера
             </button>
-            {savedAt ? (
+            {savedAt && savedDraft === draft ? (
               <span className="rounded-full bg-emerald-50 px-4 py-2 text-sm text-emerald-800">
                 Сохранено в {savedAt}
               </span>
@@ -449,12 +461,14 @@ function TodayEditor({
         </div>
       </Card>
 
+      {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
       <button
         type="button"
+        disabled={saving}
         onClick={save}
         className="w-full rounded-[26px] bg-stone-900 px-5 py-4 text-base font-medium text-white shadow-[0_20px_40px_rgba(51,48,41,0.18)]"
       >
-        Сохранить запись
+        {saving ? "Сохраняем…" : "Сохранить запись"}
       </button>
     </div>
   );

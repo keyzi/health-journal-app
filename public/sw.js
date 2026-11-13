@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quiet-health-v1'
+const CACHE_NAME = 'quiet-health-v2'
 const APP_SHELL = [
   '/',
   '/index.html',
