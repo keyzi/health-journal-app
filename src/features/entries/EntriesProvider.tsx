@@ -1,48 +1,76 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import type { User } from '@supabase/supabase-js'
+import { fetchEntries, storeEntries } from './cloud'
 import { cloneEntry } from './defaults'
 import { EntriesContext, type EntriesContextValue } from './context'
-import { loadEntries, saveEntries } from './storage'
-import type { EntriesMap } from './types'
+import { loadEntries } from './storage'
+import { supabase } from '../../shared/lib/supabase'
+import type { EntriesMap, HealthEntry } from './types'
 
-export function EntriesProvider({ children }: { children: ReactNode }) {
-  const [entriesMap, setEntriesMap] = useState<EntriesMap>(() => loadEntries())
+export function EntriesProvider({ children, user }: { children: ReactNode; user: User }) {
+  const [entriesMap, setEntriesMap] = useState<EntriesMap>({})
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [attempt, setAttempt] = useState(0)
+  const writing = useRef(false)
 
   useEffect(() => {
-    saveEntries(entriesMap)
-  }, [entriesMap])
+    let active = true
+    async function load() {
+      try {
+        const entries = await fetchEntries(supabase!, user.id)
+        if (!active) return
+        setEntriesMap(entries)
+        setError('')
+      } catch {
+        if (active) setError('Не удалось загрузить дневник. Проверьте интернет и доступ к таблице Supabase.')
+      } finally { if (active) setLoading(false) }
+    }
+    void load()
+    return () => { active = false }
+  }, [user.id, attempt])
 
-  const entriesList = Object.values(entriesMap).sort((left, right) =>
-    right.date.localeCompare(left.date),
-  )
+  async function write(entries: HealthEntry[], ignoreDuplicates = false) {
+    if (writing.current) throw new Error('Дождитесь завершения предыдущего сохранения.')
+    writing.current = true
+    try {
+      const saved = await storeEntries(supabase!, user.id, entries, ignoreDuplicates)
+      setEntriesMap(current => ({ ...current, ...saved }))
+    } finally { writing.current = false }
+  }
 
+  const entriesList = Object.values(entriesMap).sort((a, b) => b.date.localeCompare(a.date))
   const value: EntriesContextValue = {
     entriesMap,
     entriesList,
-    saveEntry(entry) {
-      setEntriesMap((current) => ({
-        ...current,
-        [entry.date]: {
-          ...entry,
-          updatedAt: new Date().toISOString(),
-        },
-      }))
+    accountEmail: user.email ?? '',
+    async saveEntry(entry) {
+      await write([{ ...entry, updatedAt: new Date().toISOString() }])
     },
-    getEntry(date) {
-      return entriesMap[date]
+    async importLocalEntries() {
+      const entries = Object.values(loadEntries())
+      if (!entries.length) return
+      // Conflicting dates stay as they are in the cloud, even if another device
+      // created them after this page was loaded. Local originals are retained.
+      await write(entries, true)
     },
-    getPreviousEntry(date) {
-      return entriesList.find((entry) => entry.date < date)
-    },
+    getEntry: date => entriesMap[date],
+    getPreviousEntry: date => entriesList.find(entry => entry.date < date),
     duplicateFromPrevious(date) {
-      const previous = entriesList.find((entry) => entry.date < date)
+      const previous = entriesList.find(entry => entry.date < date)
       return previous ? cloneEntry(previous, date) : undefined
-    },
-    clearEntries() {
-      setEntriesMap({})
     },
   }
 
-  return (
-    <EntriesContext.Provider value={value}>{children}</EntriesContext.Provider>
-  )
+  if (loading || error) return <main className="mx-auto max-w-md space-y-4 p-8">
+    <p role={error ? 'alert' : 'status'}>{error || 'Загружаем дневник…'}</p>
+    {error && <button onClick={() => { setLoading(true); setError(''); setAttempt(value => value + 1) }} className="rounded-xl bg-stone-900 p-3 text-white">Повторить</button>}
+    <button className="block text-sm underline" onClick={async () => {
+      try {
+        const { error } = await supabase!.auth.signOut({ scope: 'local' })
+        if (error) throw error
+      } catch { setError('Не удалось выйти. Попробуйте ещё раз.') }
+    }}>Выйти из аккаунта</button>
+  </main>
+  return <EntriesContext.Provider value={value}>{children}</EntriesContext.Provider>
 }
