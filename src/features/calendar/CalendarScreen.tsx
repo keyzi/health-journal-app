@@ -22,10 +22,10 @@ export function CalendarScreen() {
   return (
     <div className="space-y-4">
       <div className="px-1 pt-2">
-        <p className="text-xs uppercase tracking-[0.24em] text-stone-400">
+        <p className="text-xs uppercase tracking-[0.24em] text-muted-soft">
           Calendar
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-stone-900">
+        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-ink">
           Календарь
         </h1>
       </div>
@@ -35,23 +35,23 @@ export function CalendarScreen() {
           <button
             type="button"
             onClick={() => setMonth((current) => shiftMonth(current, -1))}
-            className="rounded-full bg-stone-100 px-3 py-2 text-sm text-stone-600"
+            className="rounded-full bg-wash px-3 py-2 text-sm text-ink-soft"
           >
             Назад
           </button>
-          <p className="text-sm font-medium capitalize text-stone-700">
+          <p className="text-sm font-medium capitalize text-ink-soft">
             {getMonthLabel(month)}
           </p>
           <button
             type="button"
             onClick={() => setMonth((current) => shiftMonth(current, 1))}
-            className="rounded-full bg-stone-100 px-3 py-2 text-sm text-stone-600"
+            className="rounded-full bg-wash px-3 py-2 text-sm text-ink-soft"
           >
             Вперёд
           </button>
         </div>
 
-        <div className="mb-3 grid grid-cols-7 gap-2 text-center text-xs text-stone-400">
+        <div className="mb-3 grid grid-cols-7 gap-2 text-center text-xs text-muted-soft">
           {weekdays.map((day) => (
             <span key={day}>{day}</span>
           ))}
@@ -74,15 +74,15 @@ export function CalendarScreen() {
                 onClick={() => navigate(`/today?date=${dateKey}`)}
                 className={`aspect-square rounded-2xl border text-sm transition ${
                   hasEntry
-                    ? "border-emerald-900/10 bg-emerald-50 text-emerald-950"
-                    : "border-stone-200 bg-stone-50 text-stone-500"
-                } ${isToday ? "ring-2 ring-stone-900/15" : ""}`}
+                    ? "border-accent-strong/10 bg-accent-soft text-accent-strong"
+                    : "border-line bg-wash-soft text-muted"
+                } ${isToday ? "ring-2 ring-accent-strong/25" : ""}`}
               >
                 <span className="flex h-full flex-col items-center justify-center">
                   <span>{date.getDate()}</span>
                   <span
                     className={`mt-1 h-1.5 w-1.5 rounded-full ${
-                      hasEntry ? "bg-emerald-800" : "bg-transparent"
+                      hasEntry ? "bg-accent-strong" : "bg-transparent"
                     }`}
                   />
                 </span>

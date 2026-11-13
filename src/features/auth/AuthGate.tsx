@@ -3,6 +3,8 @@ import type { AuthError, Session } from '@supabase/supabase-js'
 import { supabase } from '../../shared/lib/supabase'
 import { EntriesProvider } from '../entries/EntriesProvider'
 import { App } from '../../app/App'
+import { Card } from '../../shared/ui/Card'
+import { Backdrop } from '../../shared/ui/Backdrop'
 
 export function AuthGate() {
   const [session, setSession] = useState<Session | null>(null)
@@ -28,7 +30,7 @@ export function AuthGate() {
 }
 
 function AuthFrame({ children }: { children: React.ReactNode }) {
-  return <main className="min-h-screen bg-stone-100 px-5 py-20 text-stone-800"><div className="mx-auto max-w-sm space-y-6 rounded-3xl bg-white p-7 shadow-sm"><p className="text-xs uppercase tracking-widest text-stone-400">Quiet Health</p>{children}</div></main>
+  return <Backdrop><main className="relative mx-auto flex min-h-screen max-w-[460px] flex-col justify-center px-4 py-10"><Card className="space-y-6 p-7"><p className="text-xs uppercase tracking-[0.24em] text-muted-soft">Quiet Health</p>{children}</Card></main></Backdrop>
 }
 
 function LoginForm({ recovery = false, onRecovered }: { recovery?: boolean; onRecovered?: () => void }) {
@@ -63,13 +65,13 @@ function LoginForm({ recovery = false, onRecovered }: { recovery?: boolean; onRe
   }
 
   return <AuthFrame>
-    <h1 className="text-2xl font-semibold">{recovery ? 'Новый пароль' : reset ? 'Восстановить доступ' : 'Вход в дневник'}</h1>
+    <h1 className="text-3xl font-semibold tracking-[-0.03em] text-ink">{recovery ? 'Новый пароль' : reset ? 'Восстановить доступ' : 'Вход в дневник'}</h1>
     <form onSubmit={submit} className="space-y-4">
-      {!recovery && <label className="block text-sm">Почта<input required type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-xl border border-stone-200 p-3" /></label>}
-      {(!reset || recovery) && <label className="block text-sm">{recovery ? 'Новый пароль' : 'Пароль'}<input required minLength={recovery ? 8 : undefined} type="password" autoComplete={recovery ? 'new-password' : 'current-password'} value={password} onChange={e => setPassword(e.target.value)} className="mt-2 w-full rounded-xl border border-stone-200 p-3" /></label>}
-      {message && <p role="status" className="text-sm text-stone-600">{message}</p>}
-      <button disabled={busy} className="w-full rounded-xl bg-stone-900 p-3 text-white disabled:opacity-50">{busy ? 'Подождите…' : recovery ? 'Сохранить пароль' : reset ? 'Отправить ссылку' : 'Войти'}</button>
-      {!recovery && <button type="button" disabled={busy} onClick={() => { setReset(!reset); setMessage('') }} className="w-full text-sm text-stone-500">{reset ? 'Вернуться ко входу' : 'Забыли пароль?'}</button>}
+      {!recovery && <label className="block text-sm">Почта<input required type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-2xl border border-line bg-wash-soft px-4 py-3 text-sm outline-none transition focus:border-accent/70 focus:bg-surface" /></label>}
+      {(!reset || recovery) && <label className="block text-sm">{recovery ? 'Новый пароль' : 'Пароль'}<input required minLength={recovery ? 8 : undefined} type="password" autoComplete={recovery ? 'new-password' : 'current-password'} value={password} onChange={e => setPassword(e.target.value)} className="mt-2 w-full rounded-2xl border border-line bg-wash-soft px-4 py-3 text-sm outline-none transition focus:border-accent/70 focus:bg-surface" /></label>}
+      {message && <p role="status" className="text-sm text-ink-soft">{message}</p>}
+      <button disabled={busy} className="w-full rounded-2xl bg-accent-strong px-4 py-3 text-sm font-medium text-white shadow-chip disabled:opacity-50">{busy ? 'Подождите…' : recovery ? 'Сохранить пароль' : reset ? 'Отправить ссылку' : 'Войти'}</button>
+      {!recovery && <button type="button" disabled={busy} onClick={() => { setReset(!reset); setMessage('') }} className="w-full text-sm text-muted transition hover:text-ink-soft">{reset ? 'Вернуться ко входу' : 'Забыли пароль?'}</button>}
     </form>
   </AuthFrame>
 }

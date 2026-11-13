@@ -164,38 +164,38 @@ function TodayEditor({
 
   return (
     <div className="space-y-4">
-      <Card className="overflow-hidden bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,241,234,0.86))]">
+      <Card className="overflow-hidden bg-[linear-gradient(180deg,var(--color-surface),var(--color-accent-tint))]">
         <div className="space-y-4">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-stone-400">
+              <p className="text-xs uppercase tracking-[0.24em] text-muted-soft">
                 Quiet Health
               </p>
-              <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-stone-900">
+              <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-ink">
                 Сегодня
               </h1>
-              <p className="mt-1 text-sm text-stone-500">
+              <p className="mt-1 text-sm text-muted">
                 {formatLongDate(selectedDate)}
               </p>
             </div>
-            <div className="rounded-full border border-white/80 bg-white/80 px-3 py-1 text-xs text-stone-500">
+            <div className="rounded-full border border-surface/80 bg-surface/80 px-3 py-1 text-xs text-muted">
               {existingEntry ? "Запись есть" : "Новая запись"}
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-3xl bg-stone-900 px-4 py-3 text-white">
-              <p className="text-xs text-white/60">Сон</p>
+            <div className="rounded-3xl bg-accent-strong px-4 py-3 text-white">
+              <p className="text-xs text-white/80">Сон</p>
               <p className="mt-2 text-2xl font-semibold">{draft.sleepHours}ч</p>
             </div>
-            <div className="rounded-3xl bg-white px-4 py-3 text-stone-900">
-              <p className="text-xs text-stone-400">Настроение</p>
+            <div className="rounded-3xl bg-surface px-4 py-3 text-ink">
+              <p className="text-xs text-muted-soft">Настроение</p>
               <p className="mt-2 text-2xl font-semibold">
                 {draft.moodScore}/10
               </p>
             </div>
-            <div className="rounded-3xl bg-white px-4 py-3 text-stone-900">
-              <p className="text-xs text-stone-400">Шаги</p>
+            <div className="rounded-3xl bg-surface px-4 py-3 text-ink">
+              <p className="text-xs text-muted-soft">Шаги</p>
               <p className="mt-2 text-2xl font-semibold">
                 {draft.steps?.toLocaleString("ru-RU") || "—"}
               </p>
@@ -206,7 +206,7 @@ function TodayEditor({
             <button
               type="button"
               onClick={() => setSearchDate(getTodayKey())}
-              className="rounded-full bg-stone-900 px-4 py-2 text-sm font-medium text-white"
+              className="rounded-full bg-accent-strong px-4 py-2 text-sm font-medium text-white"
             >
               К сегодня
             </button>
@@ -214,12 +214,12 @@ function TodayEditor({
               type="button"
               onClick={loadPreviousDay}
               disabled={!previousEntry}
-              className="rounded-full border border-stone-200 px-4 py-2 text-sm font-medium text-stone-600 disabled:opacity-40"
+              className="rounded-full border border-line px-4 py-2 text-sm font-medium text-ink-soft disabled:opacity-40"
             >
               Копировать вчера
             </button>
             {savedAt && savedDraft === draft ? (
-              <span className="rounded-full bg-emerald-50 px-4 py-2 text-sm text-emerald-800">
+              <span className="rounded-full bg-accent-soft px-4 py-2 text-sm text-accent-strong">
                 Сохранено в {savedAt}
               </span>
             ) : null}
@@ -266,7 +266,7 @@ function TodayEditor({
                 <button
                   type="button"
                   onClick={() => addCustomChip("medications", medicineInput)}
-                  className="rounded-2xl bg-stone-900 px-4 text-sm font-medium text-white"
+                  className="rounded-2xl bg-accent-strong px-4 text-sm font-medium text-white"
                 >
                   +
                 </button>
@@ -307,7 +307,7 @@ function TodayEditor({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-stone-400">Сегодня болей не отмечено.</p>
+            <p className="text-sm text-muted-soft">Сегодня болей не отмечено.</p>
           )}
         </div>
       </Card>
@@ -424,7 +424,7 @@ function TodayEditor({
                 <button
                   type="button"
                   onClick={() => addCustomChip("meals", mealInput)}
-                  className="rounded-2xl bg-stone-900 px-4 text-sm font-medium text-white"
+                  className="rounded-2xl bg-accent-strong px-4 text-sm font-medium text-white"
                 >
                   +
                 </button>
@@ -461,12 +461,12 @@ function TodayEditor({
         </div>
       </Card>
 
-      {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
+      {saveError && <p role="alert" className="text-sm text-danger">{saveError}</p>}
       <button
         type="button"
         disabled={saving}
         onClick={save}
-        className="w-full rounded-[26px] bg-stone-900 px-5 py-4 text-base font-medium text-white shadow-[0_20px_40px_rgba(51,48,41,0.18)]"
+        className="w-full rounded-[26px] bg-accent-strong px-5 py-4 text-base font-medium text-white shadow-cta"
       >
         {saving ? "Сохраняем…" : "Сохранить запись"}
       </button>

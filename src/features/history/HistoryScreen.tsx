@@ -10,20 +10,20 @@ export function HistoryScreen() {
   return (
     <div className="space-y-4">
       <div className="px-1 pt-2">
-        <p className="text-xs uppercase tracking-[0.24em] text-stone-400">
+        <p className="text-xs uppercase tracking-[0.24em] text-muted-soft">
           Timeline
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-stone-900">
+        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-ink">
           История
         </h1>
-        <p className="mt-1 text-sm text-stone-500">
+        <p className="mt-1 text-sm text-muted">
           Все сохранённые дни в обратном порядке.
         </p>
       </div>
 
       {entriesList.length === 0 ? (
         <Card>
-          <p className="text-sm text-stone-500">
+          <p className="text-sm text-muted">
             Пока нет записей. Создайте первую запись на экране «Сегодня».
           </p>
         </Card>
@@ -38,27 +38,27 @@ export function HistoryScreen() {
             <Card className="transition hover:-translate-y-0.5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-lg font-semibold text-stone-900">
+                  <p className="text-lg font-semibold text-ink">
                     {formatShortDate(entry.date)}
                   </p>
-                  <p className="mt-1 text-sm text-stone-500">
+                  <p className="mt-1 text-sm text-muted">
                     Настроение {entry.moodScore}/10, сон {entry.sleepHours}ч
                   </p>
                 </div>
-                <div className="rounded-full bg-stone-100 px-3 py-1 text-xs text-stone-500">
+                <div className="rounded-full bg-wash px-3 py-1 text-xs text-muted">
                   {entry.pains.length
                     ? `${entry.pains.length} бол.`
                     : "без боли"}
                 </div>
               </div>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs text-stone-500">
-                <span className="rounded-full bg-stone-100 px-3 py-1">
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted">
+                <span className="rounded-full bg-wash px-3 py-1">
                   Вес {entry.weight ?? "—"}
                 </span>
-                <span className="rounded-full bg-stone-100 px-3 py-1">
+                <span className="rounded-full bg-wash px-3 py-1">
                   Шаги {entry.steps?.toLocaleString("ru-RU") || "—"}
                 </span>
-                <span className="rounded-full bg-stone-100 px-3 py-1">
+                <span className="rounded-full bg-wash px-3 py-1">
                   Еда {entry.meals.length || 0}
                 </span>
               </div>

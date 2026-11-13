@@ -9,7 +9,7 @@ function average(values: number[]) {
 function LineChart({ values }: { values: number[] }) {
   if (!values.length) {
     return (
-      <p className="text-sm text-stone-400">Недостаточно данных для графика.</p>
+      <p className="text-sm text-muted-soft">Недостаточно данных для графика.</p>
     );
   }
 
@@ -28,7 +28,7 @@ function LineChart({ values }: { values: number[] }) {
     <svg viewBox="0 0 100 100" className="h-28 w-full overflow-visible">
       <polyline
         fill="none"
-        stroke="#405c4f"
+        stroke="var(--color-accent-strong)"
         strokeWidth="2.5"
         points={points}
         strokeLinecap="round"
@@ -41,7 +41,7 @@ function LineChart({ values }: { values: number[] }) {
 function BarChart({ values }: { values: number[] }) {
   if (!values.length) {
     return (
-      <p className="text-sm text-stone-400">Недостаточно данных для графика.</p>
+      <p className="text-sm text-muted-soft">Недостаточно данных для графика.</p>
     );
   }
 
@@ -50,9 +50,9 @@ function BarChart({ values }: { values: number[] }) {
   return (
     <div className="flex h-28 items-end gap-2">
       {values.map((value, index) => (
-        <div key={index} className="flex-1 rounded-t-2xl bg-emerald-900/12">
+        <div key={index} className="flex-1 rounded-t-2xl bg-accent-soft">
           <div
-            className="w-full rounded-t-2xl bg-emerald-900"
+            className="w-full rounded-t-2xl bg-accent-strong"
             style={{ height: `${Math.max((value / max) * 100, 12)}%` }}
           />
         </div>
@@ -73,47 +73,47 @@ export function StatsScreen() {
   return (
     <div className="space-y-4">
       <div className="px-1 pt-2">
-        <p className="text-xs uppercase tracking-[0.24em] text-stone-400">
+        <p className="text-xs uppercase tracking-[0.24em] text-muted-soft">
           Analytics
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-stone-900">
+        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-ink">
           Статистика
         </h1>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <Card>
-          <p className="text-sm text-stone-400">Средний вес</p>
-          <p className="mt-3 text-3xl font-semibold text-stone-900">
+          <p className="text-sm text-muted-soft">Средний вес</p>
+          <p className="mt-3 text-3xl font-semibold text-ink">
             {weightValues.length ? average(weightValues).toFixed(1) : "—"}
           </p>
         </Card>
         <Card>
-          <p className="text-sm text-stone-400">Средний сон</p>
-          <p className="mt-3 text-3xl font-semibold text-stone-900">
+          <p className="text-sm text-muted-soft">Средний сон</p>
+          <p className="mt-3 text-3xl font-semibold text-ink">
             {entriesList.length
               ? average(entriesList.map((entry) => entry.sleepHours)).toFixed(1)
               : "—"}
           </p>
         </Card>
         <Card>
-          <p className="text-sm text-stone-400">Среднее настроение</p>
-          <p className="mt-3 text-3xl font-semibold text-stone-900">
+          <p className="text-sm text-muted-soft">Среднее настроение</p>
+          <p className="mt-3 text-3xl font-semibold text-ink">
             {entriesList.length
               ? average(entriesList.map((entry) => entry.moodScore)).toFixed(1)
               : "—"}
           </p>
         </Card>
         <Card>
-          <p className="text-sm text-stone-400">Дней с болью</p>
-          <p className="mt-3 text-3xl font-semibold text-stone-900">
+          <p className="text-sm text-muted-soft">Дней с болью</p>
+          <p className="mt-3 text-3xl font-semibold text-ink">
             {entriesList.filter((entry) => entry.pains.length > 0).length}
           </p>
         </Card>
       </div>
 
       <Card>
-        <p className="text-sm font-medium text-stone-700">
+        <p className="text-sm font-medium text-ink-soft">
           Настроение за 7 дней
         </p>
         <div className="mt-4">
@@ -122,7 +122,7 @@ export function StatsScreen() {
       </Card>
 
       <Card>
-        <p className="text-sm font-medium text-stone-700">Сон за 7 дней</p>
+        <p className="text-sm font-medium text-ink-soft">Сон за 7 дней</p>
         <div className="mt-4">
           <BarChart values={sleepValues} />
         </div>

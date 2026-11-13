@@ -6,6 +6,8 @@ import { EntriesContext, type EntriesContextValue } from './context'
 import { loadEntries } from './storage'
 import { supabase } from '../../shared/lib/supabase'
 import type { EntriesMap, HealthEntry } from './types'
+import { Card } from '../../shared/ui/Card'
+import { Backdrop } from '../../shared/ui/Backdrop'
 
 export function EntriesProvider({ children, user }: { children: ReactNode; user: User }) {
   const [entriesMap, setEntriesMap] = useState<EntriesMap>({})
@@ -62,15 +64,15 @@ export function EntriesProvider({ children, user }: { children: ReactNode; user:
     },
   }
 
-  if (loading || error) return <main className="mx-auto max-w-md space-y-4 p-8">
+  if (loading || error) return <Backdrop><main className="relative mx-auto flex min-h-screen max-w-[460px] flex-col justify-center px-4 py-10"><Card className="space-y-4 p-7">
     <p role={error ? 'alert' : 'status'}>{error || 'Загружаем дневник…'}</p>
-    {error && <button onClick={() => { setLoading(true); setError(''); setAttempt(value => value + 1) }} className="rounded-xl bg-stone-900 p-3 text-white">Повторить</button>}
-    <button className="block text-sm underline" onClick={async () => {
+    {error && <button onClick={() => { setLoading(true); setError(''); setAttempt(value => value + 1) }} className="w-full rounded-2xl bg-accent-strong px-4 py-3 text-sm font-medium text-white shadow-chip">Повторить</button>}
+    <button className="block text-sm text-muted underline" onClick={async () => {
       try {
         const { error } = await supabase!.auth.signOut({ scope: 'local' })
         if (error) throw error
       } catch { setError('Не удалось выйти. Попробуйте ещё раз.') }
     }}>Выйти из аккаунта</button>
-  </main>
+  </Card></main></Backdrop>
   return <EntriesContext.Provider value={value}>{children}</EntriesContext.Provider>
 }

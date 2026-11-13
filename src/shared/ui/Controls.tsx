@@ -15,8 +15,8 @@ export function Chip({ active, onClick, children }: ChipProps) {
       className={cn(
         "rounded-full border px-4 py-2 text-sm font-medium transition",
         active
-          ? "border-emerald-700/10 bg-emerald-900 text-white shadow-[0_8px_24px_rgba(68,92,78,0.22)]"
-          : "border-stone-200 bg-stone-50 text-stone-600",
+          ? "border-accent-strong/10 bg-accent-strong text-white shadow-chip"
+          : "border-line bg-wash-soft text-ink-soft",
       )}
     >
       {children}
@@ -34,8 +34,8 @@ export function Field({ label, hint, children }: FieldProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-3">
-        <label className="text-sm font-medium text-stone-700">{label}</label>
-        {hint ? <span className="text-xs text-stone-400">{hint}</span> : null}
+        <label className="text-sm font-medium text-ink-soft">{label}</label>
+        {hint ? <span className="text-xs text-muted-soft">{hint}</span> : null}
       </div>
       {children}
     </div>
@@ -75,12 +75,12 @@ export function SliderField({
           step={step}
           value={value}
           onChange={(event) => onChange(Number(event.target.value))}
-          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-emerald-900"
+          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-line accent-accent-strong"
           style={{
-            background: `linear-gradient(to right, #3f5d4e 0%, #3f5d4e ${percent}%, #e7e2da ${percent}%, #e7e2da 100%)`,
+            background: `linear-gradient(to right, var(--color-accent-strong) 0%, var(--color-accent-strong) ${percent}%, var(--color-line) ${percent}%, var(--color-line) 100%)`,
           }}
         />
-        <div className="flex justify-between text-xs text-stone-400">
+        <div className="flex justify-between text-xs text-muted-soft">
           <span>{lowLabel}</span>
           <span>{highLabel}</span>
         </div>
@@ -108,7 +108,7 @@ export function TextInput({
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-900/30 focus:bg-white"
+      className="w-full rounded-2xl border border-line bg-wash-soft px-4 py-3 text-sm outline-none transition focus:border-accent/70 focus:bg-surface"
     />
   );
 }
@@ -126,7 +126,7 @@ export function TextArea({ value, placeholder, onChange }: TextAreaProps) {
       placeholder={placeholder}
       rows={3}
       onChange={(event) => onChange(event.target.value)}
-      className="w-full resize-none rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-900/30 focus:bg-white"
+      className="w-full resize-none rounded-2xl border border-line bg-wash-soft px-4 py-3 text-sm outline-none transition focus:border-accent/70 focus:bg-surface"
     />
   );
 }

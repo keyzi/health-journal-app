@@ -1,17 +1,24 @@
 import { NavLink } from 'react-router-dom'
 import { cn } from '../lib/cn'
+import {
+  CalendarIcon,
+  HistoryIcon,
+  MoreIcon,
+  StatsIcon,
+  TodayIcon,
+} from './icons'
 
 const tabs = [
-  { to: '/today', label: 'Сегодня', icon: '◐' },
-  { to: '/history', label: 'История', icon: '◫' },
-  { to: '/calendar', label: 'Календарь', icon: '◭' },
-  { to: '/stats', label: 'Статистика', icon: '◒' },
-  { to: '/settings', label: 'Ещё', icon: '◎' },
+  { to: '/today', label: 'Сегодня', Icon: TodayIcon },
+  { to: '/history', label: 'История', Icon: HistoryIcon },
+  { to: '/calendar', label: 'Календарь', Icon: CalendarIcon },
+  { to: '/stats', label: 'Статистика', Icon: StatsIcon },
+  { to: '/settings', label: 'Ещё', Icon: MoreIcon },
 ]
 
 export function BottomNav() {
   return (
-    <nav className="fixed inset-x-0 bottom-4 z-20 mx-auto w-[calc(100%-24px)] max-w-[428px] rounded-[28px] border border-white/80 bg-white/90 p-2 shadow-[0_20px_60px_rgba(92,80,65,0.16)] backdrop-blur-xl">
+    <nav className="fixed inset-x-0 bottom-4 z-20 mx-auto w-[calc(100%-24px)] max-w-[428px] rounded-[28px] border border-surface/80 bg-surface/90 p-2 shadow-nav backdrop-blur-xl">
       <ul className="grid grid-cols-5 gap-1">
         {tabs.map((tab) => (
           <li key={tab.to}>
@@ -21,12 +28,12 @@ export function BottomNav() {
                 cn(
                   'flex flex-col items-center rounded-3xl px-2 py-2 text-[11px] font-medium tracking-[0.02em] transition',
                   isActive
-                    ? 'bg-stone-900 text-white'
-                    : 'text-stone-500 hover:bg-stone-100',
+                    ? 'bg-accent-strong text-white'
+                    : 'text-muted hover:bg-wash',
                 )
               }
             >
-              <span className="text-base">{tab.icon}</span>
+              <tab.Icon />
               <span>{tab.label}</span>
             </NavLink>
           </li>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quiet-health-v3'
+const CACHE_NAME = 'quiet-health-v4'
 const APP_SHELL = ['','index.html','manifest.webmanifest','icon-192.svg','icon-512.svg']
   .map((path) => new URL(path, self.registration.scope).href)
 const INDEX_URL = new URL('index.html', self.registration.scope).href

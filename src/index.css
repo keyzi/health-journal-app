@@ -1,8 +1,34 @@
 @import "tailwindcss";
 
+@theme {
+  /* Нейтральные: тёплые, с лёгким розовым подтоном */
+  --color-canvas: #f8f2f0;
+  --color-canvas-deep: #efe5e3;
+  --color-surface: #fffdfc;
+  --color-wash: #f5ecea;
+  --color-wash-soft: #faf5f3;
+  --color-line: #eaddda;
+  --color-ink: #2f2528;
+  --color-ink-soft: #5d4f53;
+  --color-muted: #84747a;
+  --color-muted-soft: #96868b;
+
+  /* Акцент: пастельный, пыльно-розовый */
+  --color-accent: #d9a5b0;
+  --color-accent-strong: #a65a6c;
+  --color-accent-soft: #f6e3e7;
+  --color-accent-tint: #fbf0f2;
+  --color-danger: #a8374a;
+
+  --shadow-card: 0 18px 60px rgba(140, 90, 100, 0.09);
+  --shadow-nav: 0 20px 60px rgba(120, 80, 90, 0.16);
+  --shadow-cta: 0 18px 36px rgba(166, 90, 108, 0.28);
+  --shadow-chip: 0 8px 24px rgba(166, 90, 108, 0.24);
+}
+
 :root {
-  color: #1c1917;
-  background: #f4efe8;
+  color: var(--color-ink);
+  background: var(--color-canvas);
   font-family:
     "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", sans-serif;
   font-synthesis: none;
@@ -16,7 +42,7 @@
 }
 
 html {
-  background: #f4efe8;
+  background: var(--color-canvas);
 }
 
 body {
