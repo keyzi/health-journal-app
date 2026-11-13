@@ -49,7 +49,7 @@ function LoginForm({ recovery = false, onRecovered }: { recovery?: boolean; onRe
         if (error) throw error
         onRecovered?.()
       } else if (reset) {
-        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin })
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: new URL(import.meta.env.BASE_URL, window.location.origin).href })
         if (error) throw error
         setMessage('Если аккаунт существует, на почту придёт ссылка для смены пароля.')
       } else {

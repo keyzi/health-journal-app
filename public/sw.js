@@ -1,11 +1,7 @@
-const CACHE_NAME = 'quiet-health-v2'
-const APP_SHELL = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest',
-  '/icon-192.svg',
-  '/icon-512.svg',
-]
+const CACHE_NAME = 'quiet-health-v3'
+const APP_SHELL = ['','index.html','manifest.webmanifest','icon-192.svg','icon-512.svg']
+  .map((path) => new URL(path, self.registration.scope).href)
+const INDEX_URL = new URL('index.html', self.registration.scope).href
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)))
@@ -32,7 +28,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return
 
   const url = new URL(request.url)
-  if (url.origin !== self.location.origin) return
+  if (url.origin !== self.location.origin || !url.href.startsWith(self.registration.scope)) return
 
   event.respondWith(
     caches.match(request).then((cached) => {
@@ -44,7 +40,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response
         })
-        .catch(() => cached || caches.match('/index.html'))
+        .catch(() => cached || caches.match(INDEX_URL))
 
       return cached || networkFetch
     }),
