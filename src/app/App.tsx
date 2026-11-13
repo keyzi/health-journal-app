@@ -10,7 +10,7 @@ import { BottomNav } from '../shared/ui/BottomNav'
 export function App() {
   return (
     <Backdrop>
-      <div className="mx-auto flex min-h-screen w-full max-w-[460px] flex-col px-4 pt-5 pb-28">
+      <div className="mx-auto flex min-h-screen w-full max-w-[460px] flex-col px-4 pt-5 pb-44">
         <main className="relative flex-1">
           <Routes>
             <Route path="/" element={<Navigate to="/today" replace />} />

@@ -74,3 +74,72 @@ export function MoreIcon(props: IconProps) {
     </Icon>
   )
 }
+
+// Иконки разделов дневника
+
+export function PillIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="3" y="8.5" width="18" height="7" rx="3.5" />
+      <path d="M12 8.5v7" />
+    </Icon>
+  )
+}
+
+export function PulseIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M3 12h4l2-5 4 10 2-5h6" />
+    </Icon>
+  )
+}
+
+export function MoonIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" />
+    </Icon>
+  )
+}
+
+export function LeafIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z" />
+      <path d="M5 19l7-7" />
+    </Icon>
+  )
+}
+
+export function ForkIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 3v7a2.5 2.5 0 0 0 2.5 2.5V21M7 3v4M12 3v4.5a2.5 2.5 0 0 1-2.5 2.5M17 3c-1.7 1.6-2.5 4-2.5 7h2.5v11" />
+    </Icon>
+  )
+}
+
+export function ScaleIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="4" y="4" width="16" height="16" rx="4" />
+      <path d="M9 9.5a4 4 0 0 1 6 0M12 12l1.5-2.5" />
+    </Icon>
+  )
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <Icon strokeWidth="3" {...props}>
+      <path d="M5 12.5l4.5 4.5L19 7.5" />
+    </Icon>
+  )
+}
+
+export function ChevronIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M9 6l6 6-6 6" />
+    </Icon>
+  )
+}

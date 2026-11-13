@@ -18,18 +18,16 @@ const tabs = [
 
 export function BottomNav() {
   return (
-    <nav className="fixed inset-x-0 bottom-4 z-20 mx-auto w-[calc(100%-24px)] max-w-[428px] rounded-[28px] border border-surface/80 bg-surface/90 p-2 shadow-nav backdrop-blur-xl">
-      <ul className="grid grid-cols-5 gap-1">
+    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/90 pb-[max(env(safe-area-inset-bottom),10px)] backdrop-blur-xl">
+      <ul className="mx-auto grid max-w-[460px] grid-cols-5 px-2 pt-2">
         {tabs.map((tab) => (
           <li key={tab.to}>
             <NavLink
               to={tab.to}
               className={({ isActive }) =>
                 cn(
-                  'flex flex-col items-center rounded-3xl px-2 py-2 text-[11px] font-medium tracking-[0.02em] transition',
-                  isActive
-                    ? 'bg-accent-strong text-white'
-                    : 'text-muted hover:bg-wash',
+                  'flex flex-col items-center gap-[3px] py-1 text-[10.5px] font-medium transition',
+                  isActive ? 'text-accent-strong [&>svg]:fill-accent-soft' : 'text-muted',
                 )
               }
             >
