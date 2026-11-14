@@ -1,15 +1,11 @@
 import { useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-  cloneEntry,
-  createEmptyEntry,
-  mealSuggestions,
-  medicationSuggestions,
-  painSuggestions,
-} from "../entries/defaults";
+import { cloneEntry, createEmptyEntry } from "../entries/defaults";
+import { closestMood, moods } from "../entries/mood";
+import type { JournalSettings } from "../settings/journalSettings";
 import { useEntries } from "../entries/useEntries";
 import type { EntriesMap, HealthEntry } from "../entries/types";
-import { formatDateKey, getTodayKey } from "../../shared/lib/date";
+import { addDays, capitalize, getTodayKey, toDate, weekdayShort } from "../../shared/lib/date";
 import { cn } from "../../shared/lib/cn";
 import {
   Chip,
@@ -38,37 +34,9 @@ function dedupe(items: string[]) {
   return Array.from(new Set(items.filter(Boolean)));
 }
 
-function toDate(dateKey: string) {
-  return new Date(`${dateKey}T12:00:00`);
-}
-
-function addDays(dateKey: string, days: number) {
-  const date = toDate(dateKey);
-  date.setDate(date.getDate() + days);
-  return formatDateKey(date);
-}
-
-function capitalize(text: string) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
 // Сравниваем черновик с исходным состоянием без служебного updatedAt.
 function snapshot(entry: HealthEntry) {
   return JSON.stringify({ ...entry, updatedAt: "" });
-}
-
-const moods = [
-  { score: 2, emoji: "😣", label: "тяжело" },
-  { score: 4, emoji: "😕", label: "так себе" },
-  { score: 6, emoji: "😐", label: "ровно" },
-  { score: 8, emoji: "🙂", label: "хорошо" },
-  { score: 10, emoji: "😊", label: "легко" },
-];
-
-function closestMood(score: number) {
-  return moods.reduce((best, mood) =>
-    Math.abs(mood.score - score) < Math.abs(best.score - score) ? mood : best,
-  );
 }
 
 type SectionId =
@@ -107,6 +75,7 @@ export function TodayScreen() {
     getPreviousEntry,
     duplicateFromPrevious,
     saveEntry,
+    settings,
   } = useEntries();
   // Живёт выше редактора, чтобы пережить его перемонтирование после сохранения.
   const [savedAt, setSavedAt] = useState<{ date: string; time: string } | null>(
@@ -125,6 +94,7 @@ export function TodayScreen() {
       previousEntry={previousEntry}
       duplicateFromPrevious={duplicateFromPrevious}
       saveEntry={saveEntry}
+      settings={settings}
       savedAt={savedAt?.date === selectedDate ? savedAt.time : null}
       onSaved={(time) => setSavedAt({ date: selectedDate, time })}
       setSearchDate={(date) => setSearchParams({ date })}
@@ -139,6 +109,7 @@ type TodayEditorProps = {
   previousEntry?: HealthEntry;
   duplicateFromPrevious: (date: string) => HealthEntry | undefined;
   saveEntry: (entry: HealthEntry) => Promise<void>;
+  settings: JournalSettings;
   savedAt: string | null;
   onSaved: (time: string) => void;
   setSearchDate: (date: string) => void;
@@ -151,6 +122,7 @@ function TodayEditor({
   previousEntry,
   duplicateFromPrevious,
   saveEntry,
+  settings,
   savedAt,
   onSaved,
   setSearchDate,
@@ -167,14 +139,17 @@ function TodayEditor({
   const [saveError, setSaveError] = useState("");
 
   const dirty = snapshot(draft) !== snapshot(baseline);
+  const { kg: kgName, st: stName } = settings.scaleNames;
+  // Типы боли из настроек плюс уже отмеченные в этой записи (даже если их убрали из списка)
+  const painPool = dedupe([...settings.pains, ...draft.pains.map((pain) => pain.type)]);
 
   const medicationPool = dedupe([
-    ...medicationSuggestions,
+    ...settings.medications,
     ...(previousEntry?.medications || []),
     ...draft.medications,
   ]);
   const mealPool = dedupe([
-    ...mealSuggestions,
+    ...settings.meals,
     ...(previousEntry?.meals || []),
     ...draft.meals,
   ]);
@@ -448,7 +423,7 @@ function TodayEditor({
         >
           <p className="text-xs text-muted">Где болит? Отметьте и задайте силу.</p>
           <div className="flex flex-wrap gap-1.5">
-            {painSuggestions.map((type) => (
+            {painPool.map((type) => (
               <Chip
                 key={type}
                 active={draft.pains.some((pain) => pain.type === type)}
@@ -503,20 +478,20 @@ function TodayEditor({
           id="state"
           icon={<LeafIcon />}
           title="Состояние"
-          summary={`КГ ${draft.kgScore} · СТ ${draft.stScore}`}
+          summary={`${kgName} ${draft.kgScore} · ${stName} ${draft.stScore}`}
           filled={filled.state}
           open={open.has("state")}
           onToggle={toggleOpen}
         >
           <ScaleField
-            label="КГ"
+            label={kgName}
             value={draft.kgScore}
             lowLabel="низко"
             highLabel="высоко"
             onChange={(value) => update("state", { kgScore: value })}
           />
           <ScaleField
-            label="СТ"
+            label={stName}
             value={draft.stScore}
             lowLabel="спокойно"
             highLabel="напряжённо"
@@ -524,7 +499,7 @@ function TodayEditor({
           />
           <TextArea
             value={draft.stComment}
-            placeholder="Комментарий к СТ: что влияло сегодня"
+            placeholder={`Комментарий к ${stName}: что влияло сегодня`}
             onChange={(value) => update("state", { stComment: value })}
           />
           <TextArea
@@ -695,8 +670,6 @@ function DayHeader({
     </header>
   );
 }
-
-const weekdayShort = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
 
 function WeekStrip({
   selectedDate,

@@ -8,6 +8,7 @@ import { supabase } from '../../shared/lib/supabase'
 import type { EntriesMap, HealthEntry } from './types'
 import { Card } from '../../shared/ui/Card'
 import { Backdrop } from '../../shared/ui/Backdrop'
+import { parseSettings, SETTINGS_METADATA_KEY, type JournalSettings } from '../settings/journalSettings'
 
 export function EntriesProvider({ children, user }: { children: ReactNode; user: User }) {
   const [entriesMap, setEntriesMap] = useState<EntriesMap>({})
@@ -15,6 +16,7 @@ export function EntriesProvider({ children, user }: { children: ReactNode; user:
   const [error, setError] = useState('')
   const [attempt, setAttempt] = useState(0)
   const writing = useRef(false)
+  const [settings, setSettings] = useState<JournalSettings>(() => parseSettings(user.user_metadata?.[SETTINGS_METADATA_KEY]))
 
   useEffect(() => {
     let active = true
@@ -46,6 +48,12 @@ export function EntriesProvider({ children, user }: { children: ReactNode; user:
     entriesMap,
     entriesList,
     accountEmail: user.email ?? '',
+    settings,
+    async saveSettings(next) {
+      const { error } = await supabase!.auth.updateUser({ data: { [SETTINGS_METADATA_KEY]: next } })
+      if (error) throw error
+      setSettings(next)
+    },
     async saveEntry(entry) {
       await write([{ ...entry, updatedAt: new Date().toISOString() }])
     },

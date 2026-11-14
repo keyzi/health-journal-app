@@ -143,3 +143,38 @@ export function ChevronIcon(props: IconProps) {
     </Icon>
   )
 }
+
+// Журнал: блокнот
+export function JournalIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M6 3.5h10a2 2 0 0 1 2 2v15l-3-2-3 2-3-2-3 2V5.5a2 2 0 0 1 2-2z" />
+      <path d="M9 8h6M9 12h4" />
+    </Icon>
+  )
+}
+
+export function DownloadIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+    </Icon>
+  )
+}
+
+export function UploadIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 20V9M7 13l5-5 5 5M5 4h14" />
+    </Icon>
+  )
+}
+
+export function BellIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z" />
+      <path d="M10 20.5a2 2 0 0 0 4 0" />
+    </Icon>
+  )
+}

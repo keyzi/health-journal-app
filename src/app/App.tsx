@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { CalendarScreen } from '../features/calendar/CalendarScreen'
-import { HistoryScreen } from '../features/history/HistoryScreen'
+import { JournalScreen } from '../features/journal/JournalScreen'
 import { SettingsScreen } from '../features/settings/SettingsScreen'
 import { StatsScreen } from '../features/stats/StatsScreen'
 import { TodayScreen } from '../features/today/TodayScreen'
@@ -15,10 +14,14 @@ export function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/today" replace />} />
             <Route path="/today" element={<TodayScreen />} />
-            <Route path="/history" element={<HistoryScreen />} />
-            <Route path="/calendar" element={<CalendarScreen />} />
+            <Route path="/journal" element={<JournalScreen />} />
+            {/* Старые адреса: История и Календарь объединены в Журнал */}
+            <Route path="/history" element={<Navigate to="/journal" replace />} />
+            <Route path="/calendar" element={<Navigate to="/journal?view=month" replace />} />
             <Route path="/stats" element={<StatsScreen />} />
             <Route path="/settings" element={<SettingsScreen />} />
+            <Route path="/settings/:section" element={<SettingsScreen />} />
+            <Route path="*" element={<Navigate to="/today" replace />} />
           </Routes>
         </main>
         <BottomNav />

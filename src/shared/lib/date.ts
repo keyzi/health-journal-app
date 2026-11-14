@@ -56,5 +56,34 @@ export function getMonthLabel(anchor: Date) {
   return new Intl.DateTimeFormat('ru-RU', {
     month: 'long',
     year: 'numeric',
-  }).format(anchor)
+  }).format(anchor).replace(/\s*г\.$/, '')
+}
+
+export function toDate(dateKey: string) {
+  return new Date(`${dateKey}T12:00:00`)
+}
+
+export function addDays(dateKey: string, days: number) {
+  const date = toDate(dateKey)
+  date.setDate(date.getDate() + days)
+  return formatDateKey(date)
+}
+
+export function capitalize(text: string) {
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+// Понедельник = 0
+export function weekdayIndex(dateKey: string) {
+  return (toDate(dateKey).getDay() + 6) % 7
+}
+
+export const weekdayShort = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
+
+export function formatDayMonth(dateKey: string) {
+  return new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(toDate(dateKey))
+}
+
+export function formatWeekdayLong(dateKey: string) {
+  return new Intl.DateTimeFormat('ru-RU', { weekday: 'long' }).format(toDate(dateKey))
 }

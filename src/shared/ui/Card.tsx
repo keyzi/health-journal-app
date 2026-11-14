@@ -8,7 +8,7 @@ export function Card({
   return (
     <section
       className={cn(
-        'rounded-[30px] border border-surface/70 bg-surface/80 p-5 shadow-card backdrop-blur',
+        'rounded-3xl bg-surface p-5 shadow-soft',
         className,
       )}
     >
